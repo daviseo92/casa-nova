@@ -1,0 +1,44 @@
+rules_version = '2';
+// Regras do banco de dados do site Casa Nova Davi & Gina.
+// Troque os e-mails abaixo pelas contas Google que podem ver o painel do casal.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.email in ['daviseo92@gmail.com'];
+    }
+
+    // Quantas cotas de cada item já foram dadas. Todo mundo vê; convidado só pode somar +1.
+    match /stock/{itemId} {
+      allow read: if true;
+      allow create: if isAdmin()
+        || (request.resource.data.keys().hasOnly(['taken']) && request.resource.data.taken == 1);
+      allow update: if isAdmin()
+        || (request.resource.data.keys().hasOnly(['taken']) && request.resource.data.taken == resource.data.taken + 1);
+      allow delete: if isAdmin();
+    }
+
+    // Mural de recados: todo mundo vê e pode escrever; só o casal apaga.
+    match /recados/{recadoId} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasOnly(['nome', 'texto', 'createdAt'])
+        && request.resource.data.nome is string
+        && request.resource.data.nome.size() > 0 && request.resource.data.nome.size() <= 80
+        && request.resource.data.texto is string
+        && request.resource.data.texto.size() > 0 && request.resource.data.texto.size() <= 500;
+      allow update: if false;
+      allow delete: if isAdmin();
+    }
+
+    // Quem deu o quê + recados. Convidado só registra; só o casal lê, edita ou apaga.
+    match /gifts/{giftId} {
+      allow create: if request.resource.data.nome is string
+        && request.resource.data.nome.size() > 0
+        && request.resource.data.nome.size() <= 80
+        && request.resource.data.get('recado', '').size() <= 500
+        && request.resource.data.valor is number;
+      allow read, update, delete: if isAdmin();
+    }
+  }
+}
