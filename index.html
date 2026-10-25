@@ -346,7 +346,7 @@ dialog::backdrop{background:rgba(46,26,23,.45);backdrop-filter:blur(2px)}
 table{border-collapse:collapse;width:100%;min-width:640px;font-size:.95rem}
 th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--paper-2);vertical-align:top}
 th{font-family:var(--f-hand);font-weight:400;color:var(--muted);font-size:1.05rem;letter-spacing:.04em}
-td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+td.tnum{font-variant-numeric:tabular-nums;white-space:nowrap}
 td .msg{color:var(--muted);font-style:italic}
 .mpill{display:inline-block;font-size:.8rem;padding:2px 9px;border-radius:999px;border:1px solid currentColor}
 .mpill.pix{color:var(--live)} .mpill.cartao{color:var(--wine)}
@@ -1128,18 +1128,18 @@ function renderPainel(gifts){
   $('#tPix').textContent = fmt(sum('pix')); $('#tCard').textContent = fmt(sum('cartao'));
   $('#tLoja').textContent = gifts.filter(g=>g.metodo==='loja').length;
   $('#pRows').innerHTML = gifts.length ? gifts.map(g=>`<tr>
-      <td class="num">${when(g.createdAt)}</td>
+      <td class="tnum">${when(g.createdAt)}</td>
       <td><b>${esc(g.nome)}</b>${g.recado?`<div class="msg">“${esc(g.recado)}”</div>`:''}</td>
       <td>${esc(g.itemNome)}</td>
       <td><span class="mpill ${g.metodo==='pix'?'pix':'cartao'}">${{pix:'Pix',cartao:'cartão',loja:'loja'}[g.metodo]||g.metodo}</span></td>
-      <td class="num">${g.metodo==='loja'?'≈ ':''}${fmt(+g.valor||0)}</td>
+      <td class="tnum">${g.metodo==='loja'?'≈ ':''}${fmt(+g.valor||0)}</td>
       <td><button class="undo" type="button" data-undo="${esc(g.id)}">Desfazer</button></td>
     </tr>`).join('') : `<tr><td colspan="6" class="empty">Nenhum presente registrado ainda.</td></tr>`;
   $('#pRows')._gifts = gifts;
   $('#pItems').innerHTML = ITENS.map(it=>{ const s=itemState(it); return `<div class="${s.out?'done':''}"><span>${esc(it.nome)}</span><span>${s.taken}/${s.total}</span></div>`; }).join('');
 }
 function renderPainelRecados(list){
-  $('#pRecados').innerHTML = list.length ? list.map(r=>`<tr><td class="num">${when(r.createdAt)}</td><td><b>${esc(r.nome)}</b></td><td class="msg">${esc(r.texto)}</td><td><button class="undo" type="button" data-delrec="${esc(r.id)}">Apagar</button></td></tr>`).join('')
+  $('#pRecados').innerHTML = list.length ? list.map(r=>`<tr><td class="tnum">${when(r.createdAt)}</td><td><b>${esc(r.nome)}</b></td><td class="msg">${esc(r.texto)}</td><td><button class="undo" type="button" data-delrec="${esc(r.id)}">Apagar</button></td></tr>`).join('')
     : `<tr><td colspan="4" class="empty">Nenhum recado no mural.</td></tr>`;
 }
 function confirmClick(b, label){ if(b.classList.contains('sure')) return true; b.classList.add('sure'); b.textContent='Confirmar?'; setTimeout(()=>{ b.classList.remove('sure'); b.textContent=label; },4000); return false; }
