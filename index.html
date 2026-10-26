@@ -357,6 +357,35 @@ td .msg{color:var(--muted);font-style:italic}
 .p-items div.done{color:var(--muted);text-decoration:line-through}
 .login{max-width:440px;margin:40px auto;text-align:center;display:flex;flex-direction:column;gap:16px;align-items:center}
 
+@media (max-width:520px){
+  dialog{width:calc(100vw - 16px);max-height:calc(100dvh - 12px)}
+  .m-head{padding:14px 16px 0;gap:10px}
+  .m-head h3{font-size:1.3rem;line-height:1.15}
+  .m-head .sub{font-size:.82rem}
+  .x{font-size:1.6rem}
+  .m-body{padding:8px 16px 14px;gap:10px}
+  #panePix{display:grid;grid-template-columns:128px minmax(0,1fr);grid-template-areas:"free free" "qr amt" "qr copy" "qr key";gap:6px 12px;text-align:left;align-items:center}
+  #panePix .free{grid-area:free;max-width:none}
+  #panePix .qr{grid-area:qr;width:128px;height:128px;padding:6px}
+  #panePix .amount{grid-area:amt;font-size:1.55rem}
+  #panePix .copy{grid-area:copy}
+  #panePix .copy input{display:none}
+  #panePix .copy .btn{width:100%;padding:.65em .8em;font-size:.88rem}
+  #panePix .keyline{grid-area:key;font-size:.78rem;line-height:1.3}
+  .divider{font-size:.95rem}
+  .confirm{gap:8px}
+  .confirm .field{gap:3px}
+  .confirm label{font-size:.95rem}
+  .confirm input{padding:.55em .75em}
+  .confirm textarea{min-height:42px;height:42px;padding:.5em .75em}
+  #gBtn{padding:.8em 1em}
+  .loja-steps{gap:4px}
+  .loja-steps li{font-size:.86rem;line-height:1.35}
+  .loja-steps b{font-size:1rem}
+  #paneLoja{gap:8px}
+  #paneLoja .keyline{font-size:.78rem;margin:0}
+  .thanks{padding:26px 20px 22px}
+}
 @media (max-width:820px){ .tiles{grid-template-columns:repeat(2,minmax(0,1fr))} }
 @media (max-width:520px){
   body{font-size:17px}
@@ -392,7 +421,7 @@ td .msg{color:var(--muted);font-style:italic}
     <svg class="tear" viewBox="0 0 600 34" preserveAspectRatio="none" aria-hidden="true"><path d="M0 34V18l18 4 14-9 20 7 16-5 22 8 12-10 20 6 18-3 16 9 20-8 14 4 22-9 16 7 18-2 20 8 14-10 22 5 16-4 18 9 20-7 14 3 22-8 16 9 18-5 20 6 14-9 22 7 16-4 20 6 18-8 14 4 20-6 16 8 18-5V34z"/></svg>
   </header>
   <div class="band">
-    <div class="eyebrow">te esperamos no</div>
+    <div class="eyebrow">esperamos no dia</div>
     <div class="date">29 de novembro de 2026</div>
     <div class="time">domingo, a partir das 13h</div>
     <a class="pill" id="mapsLink" target="_blank" rel="noopener">
@@ -550,8 +579,8 @@ td .msg{color:var(--muted);font-style:italic}
         </li>
       </ol>
       <div class="also">
-        <h3>Também tem presente em Pix ou cartão</h3>
-        <p>Os presentes maiores, como o sofá-cama e o robô aspirador, são divididos em cotas: você paga uma cota por Pix ou cartão, registra seu nome, e a gente compra com carinho.</p>
+        <h3>Também tem presente em cotas</h3>
+        <p>Os presentes maiores, como o sofá-cama e o robô aspirador, são divididos em cotas: você faz um Pix com o valor de uma cota, registra seu nome, e a gente compra com carinho.</p>
       </div>
       <div class="cta">
         <a class="btn big" href="#presentes">Ver a lista de presentes</a>
@@ -571,7 +600,7 @@ td .msg{color:var(--muted);font-style:italic}
         <button class="tab-top" role="tab" id="tRecados" aria-selected="false" type="button">Recados <span class="count" id="recCount">0</span></button>
       </div>
       <div id="panePresentes" class="lista-wrap">
-        <div class="eyebrow-l">Presentes maiores, em cotas <small>Pix ou cartão</small></div>
+        <div class="eyebrow-l">Presentes maiores, em cotas <small>via Pix</small></div>
         <div class="cotas-row" id="cotasRow" aria-live="polite"></div>
         <div class="swipe" id="swipeHint"></div>
         <div class="eyebrow-l">Comprar na loja e levar no dia <small>compre no site, receba em casa e traga no dia 29</small></div>
@@ -643,7 +672,7 @@ td .msg{color:var(--muted);font-style:italic}
       <div class="tiles">
         <div class="tile"><span>presentes recebidos</span><b id="tCount">0</b></div>
         <div class="tile"><span>total no Pix</span><b id="tPix">R$ 0</b></div>
-        <div class="tile"><span>total no cartão</span><b id="tCard">R$ 0</b></div>
+        <div class="tile"><span>cotas recebidas</span><b id="tCard">0</b></div>
         <div class="tile"><span>comprados na loja</span><b id="tLoja">0</b></div>
       </div>
       <div class="table-wrap">
@@ -673,25 +702,15 @@ td .msg{color:var(--muted);font-style:italic}
       <button class="x" type="button" data-close aria-label="Fechar">×</button>
     </div>
     <div class="m-body">
-      <div class="tabs" role="tablist" id="tabs">
-        <button class="tab" role="tab" id="tabPix" aria-selected="true" type="button">Pix</button>
-        <button class="tab" role="tab" id="tabCard" aria-selected="false" type="button">Cartão</button>
-      </div>
       <div class="pane" id="panePix">
         <div class="free" id="freeWrap" hidden><span>R$</span><input id="freeVal" inputmode="decimal" placeholder="100" aria-label="Valor do presente em reais"></div>
         <div class="amount" id="pixAmount"></div>
         <div class="qr" id="qr" aria-label="QR Code Pix"></div>
         <div class="copy">
           <input id="pixCode" readonly aria-label="Pix copia e cola">
-          <button class="btn" id="copyBtn" type="button">Copiar</button>
+          <button class="btn" id="copyBtn" type="button">Copiar código Pix</button>
         </div>
         <div class="keyline">Chave Pix: <b id="pixKey"></b> · Davi Seo</div>
-      </div>
-      <div class="pane" id="paneCard" hidden>
-        <div class="amount" id="cardAmount"></div>
-        <div class="amount-note" id="cardNote"></div>
-        <a class="btn" id="cardBtn" target="_blank" rel="noopener">Pagar no cartão pelo Mercado Pago</a>
-        <p class="keyline" id="cardInfo"></p>
       </div>
       <div class="pane" id="paneLoja" hidden>
         <ol class="loja-steps">
@@ -705,11 +724,11 @@ td .msg{color:var(--muted);font-style:italic}
       <div class="divider" id="dlgDivider">depois de pagar</div>
       <form class="confirm" id="confirmForm" novalidate>
         <div class="field">
-          <label for="gNome">Seu nome (é assim que vamos saber quem deu)</label>
+          <label for="gNome">Seu nome</label>
           <input id="gNome" autocomplete="name" maxlength="80" placeholder="Ex.: Tio Beto e Ana">
         </div>
         <div class="field">
-          <label for="gMsg">Um recado pro nosso mural (opcional)</label>
+          <label for="gMsg">Recado pro mural (opcional)</label>
           <textarea id="gMsg" maxlength="500" placeholder="Felicidades no lar novo!"></textarea>
         </div>
         <p class="err" id="gErr" hidden></p>
@@ -734,7 +753,6 @@ td .msg{color:var(--muted);font-style:italic}
    ========================================================= */
 const CONFIG = {
   pix: { chave: '41881841839', exibicao: 'CPF 418.818.418-39', nome: 'DAVI SEO', cidade: 'SAO PAULO' },
-  acrescimoCartao: 0.05,          // 5% a mais no cartão
   whatsapp: '5511911204155',
   evento: {
     titulo: 'Chá de Casa Nova · Davi & Gina',
@@ -756,30 +774,35 @@ const CONFIG = {
 
 /* Itens da lista. cotas: quantas pessoas podem dar o mesmo item.
    foto: imagem do produto (ex.: 'img/airfryer.jpg'); sem foto, usa o desenho do ícone.
-   cartao: link de pagamento do Mercado Pago com o valor do cartão. */
+*/
 const ITENS = [
   // tipo 'loja': o convidado compra no site e leva no dia. cat: categoria (vira filtro). cor: cor de preferência. valor: preço de referência (null = ver na loja).
   { id:'fruteira',        nome:'Fruteira Home Style Albers',               tipo:'loja', cat:'Cozinha', loja:'Camicado',    valor:99.99,  foto:'img/fruteira.jpg',                link:'https://www.camicado.com.br/p/fruteira-home-style-albers/-/A-100818192-br.lc' },
   { id:'talheres-bambus', nome:'Porta-talheres extensível Bambus',         tipo:'loja', cat:'Cozinha', loja:'Camicado',    valor:139.99, foto:'img/porta-talheres-camicado.jpg', link:'https://www.camicado.com.br/p/porta-talheres-extensivel-home-style-bambus/-/A-300032993-br.lc' },
   { id:'talheres-bambu',  nome:'Porta-talheres extensível de bambu',       tipo:'loja', cat:'Cozinha', loja:'Shopee',      valor:132.91, foto:'img/porta-talheres-shopee.jpg',   link:'https://br.shp.ee/YPkcytNT' },
   { id:'organizador',     nome:'Kit 7 organizadores de armário em aço',    tipo:'loja', cat:'Cozinha', loja:'Shopee',      valor:135.46, cor:'branco', foto:'img/organizador-armario.jpg', link:'https://br.shp.ee/piGDarT8' },
-  { id:'suporte-doces',   nome:'Suporte de doces de 2 andares',            tipo:'loja', cat:'Cozinha', loja:'Shein',       valor:null,   foto:'img/suporte-doces.jpg',           link:'https://onelink.shein.com/57/65pla2rzeubk?shc=2_RNuJcgOdESw' },
-  { id:'dispenser',       nome:'Dispenser de xarope para o café',          tipo:'loja', cat:'Cozinha', loja:'Shein',       valor:null,   cor:'dourado', foto:'img/dispenser-xarope.jpg', link:'https://onelink.shein.com/57/65pliwfys3si?shc=2_RNuOLFNyTnt' },
+  { id:'suporte-doces',   nome:'Suporte de doces de 2 andares',            tipo:'loja', cat:'Cozinha', loja:'Shein',       valor:135,    foto:'img/suporte-doces.jpg',           link:'https://onelink.shein.com/57/65pla2rzeubk?shc=2_RNuJcgOdESw' },
+  { id:'dispenser',       nome:'Dispenser de xarope para o café',          tipo:'loja', cat:'Cozinha', loja:'Shein',       valor:150,    cor:'dourado', foto:'img/dispenser-xarope.jpg', link:'https://onelink.shein.com/57/65pliwfys3si?shc=2_RNuOLFNyTnt' },
   { id:'edredom',         nome:'Edredom queen Fresh Supreme',              tipo:'loja', cat:'Quarto',  loja:'First Class', valor:379.99, cor:'azul', foto:'img/edredom.jpg',         link:'https://firstclass.com.br/products/edredom-queen-fresh-supreme-azul' },
-  { id:'jogo-cama',       nome:'Jogo de cama queen 200 fios Buddemeyer',   tipo:'loja', cat:'Quarto',  loja:'Mercado Livre', valor:null, cor:'azul', foto:'img/jogo-cama.jpg',       link:'https://www.mercadolivre.com.br/jogo-de-cama-queen-200-fios-buddemeyer-gran-percalle-classic/up/MLBU3723999539?pdp_filters=item_id%3AMLB6167406414' },
+  { id:'jogo-cama',       nome:'Jogo de cama queen 200 fios Buddemeyer',   tipo:'loja', cat:'Quarto',  loja:'Mercado Livre', valor:400, cor:'azul', foto:'img/jogo-cama.jpg',       link:'https://www.mercadolivre.com.br/jogo-de-cama-queen-200-fios-buddemeyer-gran-percalle-classic/up/MLBU3723999539?pdp_filters=item_id%3AMLB6167406414' },
   { id:'lencol-flores',   nome:'Jogo de lençol queen Elegance 400 fios',   tipo:'loja', cat:'Quarto',  loja:'Magalu',      valor:219.90, cor:'flores', foto:'img/lencol-flores.jpg', link:'https://www.magazineluiza.com.br/jogo-de-lencol-queen-elegance-premium-400-fios-microfibra-toque-algodao-macio-conjunto-completo-flores-corttex/p/dej66a9hkk/cm/cjct/?seller_id=manardi' },
   { id:'toalhas',         nome:'Jogo de toalhas 5 peças Nobre Natural Buettner', tipo:'loja', cat:'Banho', loja:'Buettner', valor:267.11, cor:'azul petróleo e branco', foto:'img/toalhas-buettner.jpg', link:'https://www.lojabuettner.com.br/jogo-de-toalhas-5-pecas-nobre-natural-buettner/p?skuId=13501' },
   { id:'lixeira-olie',    nome:'Lixeira de pedal Olie 25 cm',              tipo:'loja', cat:'Casa',    loja:'Camicado',    valor:139.99, cor:'verde', foto:'img/lixeira-olie.jpg',  link:'https://www.camicado.com.br/p/lixeira-de-pedal-home-style-olie-25-cm/-/A-100479160-br.lc?sku=100479178' },
   { id:'lixeira-calm',    nome:'Lixeira de pedal Calm 24 cm',              tipo:'loja', cat:'Casa',    loja:'Camicado',    valor:139.99, cor:'rosa',  foto:'img/lixeira-calm.jpg',  link:'https://www.camicado.com.br/p/lixeira-de-pedal-home-style-calm-24-cm/-/A-101195302-br.lc' },
+  { id:'escorredor',      nome:'Escorredor de louça Tramontina Plurale',   tipo:'loja', cat:'Cozinha', loja:'Amazon',      valor:164.75, cor:'grafite', foto:'img/escorredor.jpg', link:'https://www.amazon.com.br/dp/B0FM18XT4R' },
+  { id:'mesa-lateral',    nome:'Mesa lateral Poá em madeira maciça Artemobili', tipo:'loja', cat:'Sala', loja:'Artemobili', valor:476.94, cor:'bordô', foto:'img/mesa-lateral.jpg', link:'https://artemobilistore.com.br/produtos/mesa-lateral-alta-em-madeira-macica-poa-artemobili/' },
+  { id:'cabideiro',       nome:'Cabideiro de chão em madeira, 8 ganchos',  tipo:'loja', cat:'Casa',    loja:'Amazon',      valor:189.99, foto:'img/cabideiro.jpg', link:'https://www.amazon.com.br/dp/B0GS1JKNTY' },
   { id:'carrinho',        nome:'Carrinho multiuso dobrável 120 L',         tipo:'loja', cat:'Lazer',   loja:'Shopee',      valor:224.73, foto:'img/carrinho.jpg',                link:'https://br.shp.ee/YB23uuq4' },
-  // sem tipo: cota em dinheiro (Pix ou cartão), só foto e preço. valor: valor de cada cota.
+  // sem tipo: cota em dinheiro via Pix, só foto e preço. valor: valor de cada cota.
   { id:'sofa-cama',  nome:'Sofá-cama Stack',                   valor:340, cotas:7,  cor:'cinza', foto:'img/sofa-cama.jpg' },
   { id:'aspirador',  nome:'Robô aspirador Xiaomi H50',         valor:300, cotas:10,              foto:'img/aspirador-h50.jpg' },
+  { id:'kit-penteadeira', nome:'Kit penteadeira Verti com espelho LED, mesa de cabeceira e puf', valor:200, cotas:14, cor:'verde', foto:'img/kit-penteadeira.jpg' },
+  { id:'mesas-cabeceira', nome:'2 mesas de cabeceira Verti com nicho', valor:240, cotas:5, cor:'verde', foto:'img/mesa-cabeceira.jpg' },
   { id:'depurador',  nome:'Depurador Slim Touch 60 cm Suggar', valor:140, cotas:5,  cor:'preto', foto:'img/depurador.jpg' },
   { id:'echo-dot',   nome:'Echo Dot 5ª geração',               valor:170, cotas:3,  cor:'preto', foto:'img/echo-dot.jpg' },
   { id:'pillow-top', nome:'Pillow top queen Buddemeyer',       valor:200, cotas:4,               foto:'img/pillow-top.jpg' },
 ];
-const CAT_ORDEM = ['Cozinha','Quarto','Banho','Casa','Lazer'];
+const CAT_ORDEM = ['Cozinha','Sala','Quarto','Banho','Casa','Lazer'];
 const LIVRE = { id:'livre', nome:'Pix livre', livre:true };
 
 /* ========================================================= */
@@ -799,7 +822,6 @@ const ICONS = {
 
 const $ = s => document.querySelector(s);
 const fmt = v => 'R$ ' + (Number.isInteger(v) ? v.toLocaleString('pt-BR') : v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}));
-const cardPrice = v => Math.ceil(v * (1 + CONFIG.acrescimoCartao));
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const when = t => new Date(t).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
 function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),3200); }
@@ -1003,7 +1025,7 @@ function renderGrid(){
     || `<p class="empty">Nenhum presente nesta categoria.</p>`;
   prevOut = nowOut; firstRender=false;
 }
-const CORES = { verde:'#7E9C8A', rosa:'#D9A9A9', branco:'#FFFFFF', azul:'#8FAAC8', cinza:'#A9A9A6', preto:'#2B2B2B', dourado:'#C9A24A', flores:'linear-gradient(135deg,#D9A9A9,#8FAAC8,#7E9C8A)', 'azul petróleo e branco':'linear-gradient(135deg,#3E6E7E 50%,#fff 50%)' };
+const CORES = { 'bordô':'#6E1F2B', grafite:'#4A4A4A', verde:'#7E9C8A', rosa:'#D9A9A9', branco:'#FFFFFF', azul:'#8FAAC8', cinza:'#A9A9A6', preto:'#2B2B2B', dourado:'#C9A24A', flores:'linear-gradient(135deg,#D9A9A9,#8FAAC8,#7E9C8A)', 'azul petróleo e branco':'linear-gradient(135deg,#3E6E7E 50%,#fff 50%)' };
 function corHex(c){ return CORES[c] || '#ccc'; }
 function renderMini(){
   const vistos=new Set(); const lojas = ITENS.filter(it=>isLoja(it) && it.foto && !vistos.has(it.cat) && vistos.add(it.cat)).slice(0,3);
@@ -1040,18 +1062,12 @@ $('#muralForm').addEventListener('submit', async e=>{
 
 /* ---------- Janela de presente ---------- */
 const dlg=$('#dlg'); let cur=null, metodo='pix';
-function setTab(m){
-  metodo=m;
-  $('#tabPix').setAttribute('aria-selected', m==='pix'); $('#tabCard').setAttribute('aria-selected', m==='cartao');
-  $('#panePix').hidden = m!=='pix'; $('#paneCard').hidden = m!=='cartao';
-}
-$('#tabPix').onclick=()=>setTab('pix'); $('#tabCard').onclick=()=>setTab('cartao');
 function btnLabel(){ return cur && isLoja(cur) ? 'Já comprei, marcar como esgotado' : 'Já paguei, registrar presente'; }
 function currentValue(){
   if(!cur) return 0;
   if(isLoja(cur)) return cur.valor||0;
   if(cur.livre){ const v=parseFloat(($('#freeVal').value||'').replace(/\./g,'').replace(',','.')); return isFinite(v)&&v>0 ? Math.round(v*100)/100 : 0; }
-  return metodo==='cartao' ? cardPrice(cur.valor) : cur.valor;
+  return cur.valor;
 }
 function refreshPix(){
   const v = cur.livre ? currentValue() : cur.valor;
@@ -1067,7 +1083,6 @@ function openGift(it){
   const loja = isLoja(it);
   $('#dlgCor').hidden = !it.cor; if(it.cor) $('#dlgCor').textContent = `Cor de preferência: ${it.cor}`;
   $('#dlgRef').hidden = !it.ref; if(it.ref){ $('#dlgRef').href=it.ref; $('#dlgRef').textContent=`Ver o produto na ${it.refLoja||'loja'}`; }
-  $('#tabs').hidden = !!it.livre || loja;
   $('#paneLoja').hidden = !loja;
   $('#dlgDivider').textContent = loja ? 'depois de comprar' : 'depois de pagar';
   $('#gBtn').textContent = btnLabel();
@@ -1076,16 +1091,10 @@ function openGift(it){
     $('#lojaBtn').textContent = `Abrir na ${it.loja||'loja'}`;
     if(it.link){ $('#lojaBtn').href=it.link; $('#lojaBtn').removeAttribute('aria-disabled'); $('#lojaInfo').textContent='Abre a página do produto em outra aba.'; }
     else { $('#lojaBtn').removeAttribute('href'); $('#lojaBtn').setAttribute('aria-disabled','true'); $('#lojaInfo').textContent='Versão de teste: o link da loja ainda não foi configurado.'; }
-    $('#panePix').hidden=true; $('#paneCard').hidden=true;
+    $('#panePix').hidden=true;
     dlg.showModal(); return;
   }
-  if(!it.livre){
-    $('#cardAmount').textContent = fmt(cardPrice(it.valor));
-    $('#cardNote').textContent = `${fmt(it.valor)} + 5% da operadora do cartão`;
-    if(it.cartao){ $('#cardBtn').href=it.cartao; $('#cardBtn').removeAttribute('aria-disabled'); $('#cardInfo').textContent='Abre o pagamento seguro do Mercado Pago em outra aba. Depois volte aqui e registre seu presente.'; }
-    else { $('#cardBtn').removeAttribute('href'); $('#cardBtn').setAttribute('aria-disabled','true'); $('#cardInfo').textContent='Versão de teste: o link do cartão ainda não foi configurado.'; }
-  }
-  setTab('pix'); refreshPix();
+  $('#panePix').hidden=false; refreshPix();
   dlg.showModal();
 }
 $('#freeVal').addEventListener('input', refreshPix);
@@ -1100,7 +1109,7 @@ $('#confirmForm').addEventListener('submit', async e=>{
   if(cur.livre && !valor){ err.textContent='Digite o valor do presente lá em cima.'; err.hidden=false; $('#freeVal').focus(); return; }
   btn.disabled=true; btn.textContent='Registrando…';
   try{
-    await store.claim(cur, { itemId:cur.id, itemNome:cur.nome, nome, recado, metodo: isLoja(cur)?'loja':cur.livre?'pix':metodo, valor, livre:!!cur.livre });
+    await store.claim(cur, { itemId:cur.id, itemNome:cur.nome, nome, recado, metodo: isLoja(cur)?'loja':'pix', valor, livre:!!cur.livre });
     try{ localStorage.setItem('casaNova.nome', nome); }catch(_){}
     $('#dlgMain').hidden=true; $('#dlgThanks').hidden=false;
     $('#thanksTitle').textContent = `Obrigado, ${nome.split(' ')[0]}!`;
@@ -1125,7 +1134,7 @@ function renderPainel(gifts){
   $('#pLogin').hidden=true; $('#pContent').hidden=false;
   const sum = m => gifts.filter(g=>g.metodo===m).reduce((a,g)=>a+(+g.valor||0),0);
   $('#tCount').textContent = gifts.length;
-  $('#tPix').textContent = fmt(sum('pix')); $('#tCard').textContent = fmt(sum('cartao'));
+  $('#tPix').textContent = fmt(sum('pix')); $('#tCard').textContent = gifts.filter(g=>g.metodo==='pix' && !g.livre).length;
   $('#tLoja').textContent = gifts.filter(g=>g.metodo==='loja').length;
   $('#pRows').innerHTML = gifts.length ? gifts.map(g=>`<tr>
       <td class="tnum">${when(g.createdAt)}</td>
