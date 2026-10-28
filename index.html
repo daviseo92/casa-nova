@@ -250,6 +250,13 @@ input:focus,select:focus,textarea:focus{border-color:var(--wine)}
 .it .ph img{width:100%;height:100%;object-fit:contain;padding:8px}
 .it .ph svg{width:42%;stroke:var(--wine-deep);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .it .ph.icon{background:var(--paper-2)}
+.flags{position:absolute;left:8px;top:8px;display:flex;flex-wrap:wrap;gap:4px;max-width:calc(100% - 16px)}
+.flag{font-size:.7rem;line-height:1.2;border-radius:99px;padding:3px 8px;font-weight:600;letter-spacing:.02em}
+.flag.promo{background:var(--wine);color:var(--card)}
+.flag.intl{background:rgba(251,248,243,.94);color:var(--wine-deep);border:1px solid var(--pencil)}
+.m-note{font-size:.85rem;line-height:1.35;margin-top:6px;padding:6px 10px;border-radius:6px}
+.m-note.promo{background:rgba(142,31,37,.08);color:var(--wine-deep)}
+.m-note.intl{background:var(--paper-2);color:var(--ink)}
 .store{position:absolute;left:8px;bottom:8px;font-size:.72rem;background:rgba(251,248,243,.92);color:var(--wine-deep);border-radius:99px;padding:2px 8px;border:1px solid var(--paper-2)}
 .it .bd{padding:9px 11px 11px;display:flex;flex-direction:column;gap:3px;flex:1}
 .it h4{margin:0;font-weight:500;font-size:.92rem;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.5em}
@@ -698,7 +705,7 @@ td .msg{color:var(--muted);font-style:italic}
 <dialog id="dlg" aria-labelledby="dlgTitle">
   <div id="dlgMain">
     <div class="m-head">
-      <div><h3 id="dlgTitle"></h3><div class="sub" id="dlgSub"></div><div class="sub cor-line" id="dlgCor" hidden></div><a class="sub" id="dlgRef" target="_blank" rel="noopener" hidden></a></div>
+      <div><h3 id="dlgTitle"></h3><div class="sub" id="dlgSub"></div><div class="sub cor-line" id="dlgCor" hidden></div><div class="m-note promo" id="dlgPromo" hidden></div><div class="m-note intl" id="dlgIntl" hidden></div><a class="sub" id="dlgRef" target="_blank" rel="noopener" hidden></a></div>
       <button class="x" type="button" data-close aria-label="Fechar">×</button>
     </div>
     <div class="m-body">
@@ -776,20 +783,27 @@ const CONFIG = {
    foto: imagem do produto (ex.: 'img/airfryer.jpg'); sem foto, usa o desenho do ícone.
 */
 const ITENS = [
+  // valor: preço cheio (sem promoção). promo + promoEm: preço promocional e o dia em que foi visto (vira o selo "promoção"). intl: venda internacional (entrega demorada).
   // tipo 'loja': o convidado compra no site e leva no dia. cat: categoria (vira filtro). cor: cor de preferência. valor: preço de referência (null = ver na loja).
   { id:'fruteira',        nome:'Fruteira Home Style Albers',               tipo:'loja', cat:'Cozinha', loja:'Camicado',    valor:99.99,  foto:'img/fruteira.jpg',                link:'https://www.camicado.com.br/p/fruteira-home-style-albers/-/A-100818192-br.lc' },
   { id:'talheres-bambus', nome:'Porta-talheres extensível Bambus',         tipo:'loja', cat:'Cozinha', loja:'Camicado',    valor:139.99, foto:'img/porta-talheres-camicado.jpg', link:'https://www.camicado.com.br/p/porta-talheres-extensivel-home-style-bambus/-/A-300032993-br.lc' },
   { id:'talheres-bambu',  nome:'Porta-talheres extensível de bambu',       tipo:'loja', cat:'Cozinha', loja:'Shopee',      valor:132.91, foto:'img/porta-talheres-shopee.jpg',   link:'https://br.shp.ee/YPkcytNT' },
   { id:'organizador',     nome:'Kit 7 organizadores de armário em aço',    tipo:'loja', cat:'Cozinha', loja:'Shopee',      valor:135.46, cor:'branco', foto:'img/organizador-armario.jpg', link:'https://br.shp.ee/piGDarT8' },
-  { id:'suporte-doces',   nome:'Suporte de doces de 2 andares',            tipo:'loja', cat:'Cozinha', loja:'Shein',       valor:135,    foto:'img/suporte-doces.jpg',           link:'https://onelink.shein.com/57/65pla2rzeubk?shc=2_RNuJcgOdESw' },
-  { id:'dispenser',       nome:'Dispenser de xarope para o café',          tipo:'loja', cat:'Cozinha', loja:'Shein',       valor:150,    cor:'dourado', foto:'img/dispenser-xarope.jpg', link:'https://onelink.shein.com/57/65pliwfys3si?shc=2_RNuOLFNyTnt' },
-  { id:'edredom',         nome:'Edredom queen Fresh Supreme',              tipo:'loja', cat:'Quarto',  loja:'First Class', valor:379.99, cor:'azul', foto:'img/edredom.jpg',         link:'https://firstclass.com.br/products/edredom-queen-fresh-supreme-azul' },
+  { id:'suporte-doces',   nome:'Suporte de doces de 2 andares',            tipo:'loja', cat:'Cozinha', loja:'Shein',       valor:135,    intl:true, foto:'img/suporte-doces.jpg',           link:'https://onelink.shein.com/57/65pla2rzeubk?shc=2_RNuJcgOdESw' },
+  { id:'dispenser',       nome:'Dispenser de xarope de vidro 500 ml com bomba', tipo:'loja', cat:'Cozinha', loja:'Shein',  valor:93,     intl:true, cor:'garrafa + ouro', foto:'img/dispenser-xarope.jpg', link:'https://br.shein.com/1-Set-500ml-17oz-Glass-Coffee-Syrup-Dispenser-With-Pump-Glass-Container-Bottle-With-Pressure-Dispenser-p-418873758.html' },
+  { id:'edredom',         nome:'Edredom queen Fresh Supreme',              tipo:'loja', cat:'Quarto',  loja:'First Class', valor:429.99, promo:399.99, promoEm:'28/10', cor:'cinza', foto:'img/edredom-cinza.jpg', link:'https://firstclass.com.br/products/edredom-queen-fresh-supreme-cinza' },
   { id:'jogo-cama',       nome:'Jogo de cama queen 200 fios Buddemeyer',   tipo:'loja', cat:'Quarto',  loja:'Mercado Livre', valor:400, cor:'azul', foto:'img/jogo-cama.jpg',       link:'https://www.mercadolivre.com.br/jogo-de-cama-queen-200-fios-buddemeyer-gran-percalle-classic/up/MLBU3723999539?pdp_filters=item_id%3AMLB6167406414' },
   { id:'lencol-flores',   nome:'Jogo de lençol queen Elegance 400 fios',   tipo:'loja', cat:'Quarto',  loja:'Magalu',      valor:219.90, cor:'flores', foto:'img/lencol-flores.jpg', link:'https://www.magazineluiza.com.br/jogo-de-lencol-queen-elegance-premium-400-fios-microfibra-toque-algodao-macio-conjunto-completo-flores-corttex/p/dej66a9hkk/cm/cjct/?seller_id=manardi' },
-  { id:'toalhas',         nome:'Jogo de toalhas 5 peças Nobre Natural Buettner', tipo:'loja', cat:'Banho', loja:'Buettner', valor:267.11, cor:'azul petróleo e branco', foto:'img/toalhas-buettner.jpg', link:'https://www.lojabuettner.com.br/jogo-de-toalhas-5-pecas-nobre-natural-buettner/p?skuId=13501' },
+  { id:'toalhas',         nome:'Jogo de toalhas 5 peças Nobre Natural Buettner', tipo:'loja', cat:'Banho', loja:'Buettner', valor:317.85, promo:258.68, promoEm:'27/10', cor:'azul petróleo e branco', foto:'img/toalhas-buettner.jpg', link:'https://www.lojabuettner.com.br/jogo-de-toalhas-5-pecas-nobre-natural-buettner/p?skuId=13501' },
+  { id:'tacas-ambar',     nome:'Jogo de 6 taças de vinho Sommelier',       tipo:'loja', cat:'Mesa',    loja:'Westwing',    valor:237.90, promo:207.90, promoEm:'27/10', cor:'âmbar', foto:'img/tacas-ambar.jpg', link:'https://www.westwing.com.br/p/jogo-de-tacas-para-vinho-sommelier-ambar/FL641CP35FIEWW.html' },
+  { id:'bandeja-oval',    nome:'Bandeja oval de madeira',                  tipo:'loja', cat:'Mesa',    loja:'Zara Home',   valor:189.90, foto:'img/bandeja-oval.jpg', link:'https://www.zarahome.com/br/bandeja-de-madeira-oval-l47205040?colorId=052' },
+  { id:'prato-bolo',      nome:'Prato para bolo de borossilicato e madeira', tipo:'loja', cat:'Mesa',  loja:'Zara Home',   valor:289.90, foto:'img/prato-bolo.jpg', link:'https://www.zarahome.com/br/prato-para-bolo-de-borossilicato-e-madeira-l48224220?colorId=990' },
+  { id:'saleiro',         nome:'Saleiro e pimenteiro de borossilicato',    tipo:'loja', cat:'Mesa',    loja:'Zara Home',   valor:139.90, foto:'img/saleiro-pimenteiro.jpg', link:'https://www.zarahome.com/br/conjunto-de-saleiro-e-pimenteiro-de-borossilicato-l46250541?colorId=990' },
+  { id:'lencol-damask',   nome:'Jogo de lençol queen Damask Square 300 fios', tipo:'loja', cat:'Quarto', loja:'Westwing',  valor:524.00, cor:'verde', foto:'img/lencol-damask.jpg', link:'https://www.westwing.com.br/p/jogo-de-lencol-damask-square-verde-300-fios/BU338CP70BCPWW.html?dwvar_BU338CP70BCPWW_variantRealColor=Verde&dwvar_BU338CP70BCPWW_variantSize=Queen%20Size&quantity=1' },
+  { id:'cesto-seagrass',  nome:'Cesto cilíndrico de seagrass 20 × 30 × 30 cm', tipo:'loja', cat:'Casa', loja:'Zara Home',  valor:189.90, cor:'pedra', foto:'img/cesto-seagrass.jpg', link:'https://www.zarahome.com/br/cesto-cilindrico-de-seagrass-l42140049?colorId=700' },
   { id:'lixeira-olie',    nome:'Lixeira de pedal Olie 25 cm',              tipo:'loja', cat:'Casa',    loja:'Camicado',    valor:139.99, cor:'verde', foto:'img/lixeira-olie.jpg',  link:'https://www.camicado.com.br/p/lixeira-de-pedal-home-style-olie-25-cm/-/A-100479160-br.lc?sku=100479178' },
   { id:'lixeira-calm',    nome:'Lixeira de pedal Calm 24 cm',              tipo:'loja', cat:'Casa',    loja:'Camicado',    valor:139.99, cor:'rosa',  foto:'img/lixeira-calm.jpg',  link:'https://www.camicado.com.br/p/lixeira-de-pedal-home-style-calm-24-cm/-/A-101195302-br.lc' },
-  { id:'escorredor',      nome:'Escorredor de louça Tramontina Plurale',   tipo:'loja', cat:'Cozinha', loja:'Amazon',      valor:164.75, cor:'grafite', foto:'img/escorredor.jpg', link:'https://www.amazon.com.br/dp/B0FM18XT4R' },
+  { id:'escorredor',      nome:'Escorredor de louça Tramontina Plurale',   tipo:'loja', cat:'Cozinha', loja:'Amazon',      valor:188.61, promo:145.25, promoEm:'27/10', cor:'grafite', foto:'img/escorredor.jpg', link:'https://www.amazon.com.br/dp/B0FM18XT4R' },
   { id:'mesa-lateral',    nome:'Mesa lateral Poá em madeira maciça Artemobili', tipo:'loja', cat:'Sala', loja:'Artemobili', valor:476.94, cor:'bordô', foto:'img/mesa-lateral.jpg', link:'https://artemobilistore.com.br/produtos/mesa-lateral-alta-em-madeira-macica-poa-artemobili/' },
   { id:'cabideiro',       nome:'Cabideiro de chão em madeira, 8 ganchos',  tipo:'loja', cat:'Casa',    loja:'Amazon',      valor:189.99, foto:'img/cabideiro.jpg', link:'https://www.amazon.com.br/dp/B0GS1JKNTY' },
   { id:'carrinho',        nome:'Carrinho multiuso dobrável 120 L',         tipo:'loja', cat:'Lazer',   loja:'Shopee',      valor:224.73, foto:'img/carrinho.jpg',                link:'https://br.shp.ee/YB23uuq4' },
@@ -802,7 +816,7 @@ const ITENS = [
   { id:'echo-dot',   nome:'Echo Dot 5ª geração',               valor:170, cotas:3,  cor:'preto', foto:'img/echo-dot.jpg' },
   { id:'pillow-top', nome:'Pillow top queen Buddemeyer',       valor:200, cotas:4,               foto:'img/pillow-top.jpg' },
 ];
-const CAT_ORDEM = ['Cozinha','Sala','Quarto','Banho','Casa','Lazer'];
+const CAT_ORDEM = ['Cozinha','Mesa','Sala','Quarto','Banho','Casa','Lazer'];
 const LIVRE = { id:'livre', nome:'Pix livre', livre:true };
 
 /* ========================================================= */
@@ -993,7 +1007,7 @@ const corHTML = it => it.cor ? `<div class="meta"><i style="background:${corHex(
 function itemHTML(it){
   const s=itemState(it), justOut = !firstRender && s.out && !prevOut.has(it.id);
   return `<article class="it${s.out?' out':''}${justOut?' just-out':''}" ${s.out?'':`data-give="${esc(it.id)}" role="button" tabindex="0" aria-label="Presentear: ${esc(it.nome)}"`}>
-    <div class="ph${it.foto?'':' icon'}">${picHTML(it)}<span class="store">${esc(it.loja||'loja')}</span>${s.out?'<span class="it-stamp">ESGOTADO</span>':''}</div>
+    <div class="ph${it.foto?'':' icon'}">${picHTML(it)}${!s.out && (it.promo||it.intl) ? `<span class="flags">${it.promo?'<span class="flag promo">promoção</span>':''}${it.intl?'<span class="flag intl">internacional</span>':''}</span>` : ''}<span class="store">${esc(it.loja||'loja')}</span>${s.out?'<span class="it-stamp">ESGOTADO</span>':''}</div>
     <div class="bd"><h4>${esc(it.nome)}</h4>${corHTML(it)}
       <div class="foot">${s.out?'<span class="it-price">já presenteado</span>':`<span class="it-price${it.valor?'':' soft'}">${it.valor?fmt(it.valor):'ver preço na loja'}</span><span class="go">${ARROW}</span>`}</div>
     </div>
@@ -1025,7 +1039,7 @@ function renderGrid(){
     || `<p class="empty">Nenhum presente nesta categoria.</p>`;
   prevOut = nowOut; firstRender=false;
 }
-const CORES = { 'bordô':'#6E1F2B', grafite:'#4A4A4A', verde:'#7E9C8A', rosa:'#D9A9A9', branco:'#FFFFFF', azul:'#8FAAC8', cinza:'#A9A9A6', preto:'#2B2B2B', dourado:'#C9A24A', flores:'linear-gradient(135deg,#D9A9A9,#8FAAC8,#7E9C8A)', 'azul petróleo e branco':'linear-gradient(135deg,#3E6E7E 50%,#fff 50%)' };
+const CORES = { 'garrafa + ouro':'linear-gradient(135deg,#F1E9DA 50%,#C9A24A 50%)', 'âmbar':'#C49A5A', pedra:'#B7B2A8', 'bordô':'#6E1F2B', grafite:'#4A4A4A', verde:'#7E9C8A', rosa:'#D9A9A9', branco:'#FFFFFF', azul:'#8FAAC8', cinza:'#A9A9A6', preto:'#2B2B2B', dourado:'#C9A24A', flores:'linear-gradient(135deg,#D9A9A9,#8FAAC8,#7E9C8A)', 'azul petróleo e branco':'linear-gradient(135deg,#3E6E7E 50%,#fff 50%)' };
 function corHex(c){ return CORES[c] || '#ccc'; }
 function renderMini(){
   const vistos=new Set(); const lojas = ITENS.filter(it=>isLoja(it) && it.foto && !vistos.has(it.cat) && vistos.add(it.cat)).slice(0,3);
@@ -1082,6 +1096,8 @@ function openGift(it){
   $('#freeWrap').hidden = !it.livre; $('#freeVal').value='';
   const loja = isLoja(it);
   $('#dlgCor').hidden = !it.cor; if(it.cor) $('#dlgCor').textContent = `Cor de preferência: ${it.cor}`;
+  $('#dlgPromo').hidden = !it.promo; if(it.promo) $('#dlgPromo').textContent = `Em promoção: ${it.promoEm?`em ${it.promoEm} `:''}estava por ${fmt(it.promo)} na loja. Confira o preço na hora da compra.`;
+  $('#dlgIntl').hidden = !it.intl; if(it.intl) $('#dlgIntl').textContent = 'Venda internacional: a entrega pode levar algumas semanas, então vale comprar com antecedência.';
   $('#dlgRef').hidden = !it.ref; if(it.ref){ $('#dlgRef').href=it.ref; $('#dlgRef').textContent=`Ver o produto na ${it.refLoja||'loja'}`; }
   $('#paneLoja').hidden = !loja;
   $('#dlgDivider').textContent = loja ? 'depois de comprar' : 'depois de pagar';
